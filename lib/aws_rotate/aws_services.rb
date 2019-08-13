@@ -1,4 +1,5 @@
 require "aws-sdk-iam"
+require "aws-sdk-sts"
 
 module AwsRotate
   module AwsServices
@@ -8,5 +9,10 @@ module AwsRotate
       Aws::IAM::Client.new
     end
     memoize :iam
+
+    def sts
+      Aws::STS::Client.new
+    end
+    memoize :sts
   end
 end

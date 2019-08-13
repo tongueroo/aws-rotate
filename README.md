@@ -7,8 +7,8 @@ Rotates your ~/.aws keys.
 
 ## Usage
 
-    aws-rotate list
-    aws-rotate key
+    aws-rotate list # list profiles in ~/.aws
+    aws-rotate key  # rotate single key. Uses AWS_PROFILE env var
     aws-rotate keys # rotate all keys
 
 ## Installation

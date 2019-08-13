@@ -9,6 +9,12 @@ module AwsRotate
       List.new(options).run
     end
 
+    desc "key PROFILE", "rotate key for profile"
+    long_desc Help.text(:key)
+    def key
+      Key.new(options).run
+    end
+
     desc "completion *PARAMS", "Prints words for auto-completion."
     long_desc Help.text("completion")
     def completion(*params)

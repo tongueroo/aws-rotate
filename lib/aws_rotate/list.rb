@@ -1,11 +1,5 @@
 module AwsRotate
   class List < Base
-    def initialize(options={})
-      super
-      @config_path = options[:config] || "#{ENV['HOME']}/.aws/config"
-      @credentials_path = options[:credentials] || "#{ENV['HOME']}/.aws/credentials"
-    end
-
     def run
       puts "AWS Profiles:"
       puts profiles
