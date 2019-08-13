@@ -9,10 +9,16 @@ module AwsRotate
       List.new(options).run
     end
 
-    desc "key PROFILE", "rotate key for profile"
+    desc "key", "rotate key for AWS_PROFILE profile"
     long_desc Help.text(:key)
     def key
       Key.new(options).run
+    end
+
+    desc "keys", "rotate keys for all profiles in ~/.aws/credentials"
+    long_desc Help.text(:keys)
+    def keys
+      Keys.new(options).run
     end
 
     desc "completion *PARAMS", "Prints words for auto-completion."

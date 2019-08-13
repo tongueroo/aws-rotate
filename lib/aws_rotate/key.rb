@@ -2,16 +2,12 @@ module AwsRotate
   class Key < Base
     class MaxKeysError < StandardError; end
 
-    def initialize(options={})
-      super
-      @profile = ENV['AWS_PROFILE'] || abort("AWS_PROFILE must be set")
-    end
-
     def run
       @user = get_iam_user # will only rotate keys that belong to an actual IAM user
       return unless @user
 
       check_max_keys_limit
+      puts "Updating access key for AWS_PROFILE=#{@profile}"
       key = create_access_key
       backup_credentials
       update_aws_credentials_file(key.access_key_id, key.secret_access_key)
@@ -78,15 +74,15 @@ module AwsRotate
       resp.access_key
     end
 
-    def ensure_dot_aws_exists
-      FileUtils.mkdir_p(File.dirname(@credentials_path))
-    end
-
     def backup_credentials
       ensure_dot_aws_exists
       backup_path = @credentials_path + ".bak-#{Time.now.strftime("%F-%T")}"
       FileUtils.cp(@credentials_path, backup_path)
       puts "Backed up credentials file at: #{backup_path}"
+    end
+
+    def ensure_dot_aws_exists
+      FileUtils.mkdir_p(File.dirname(@credentials_path))
     end
 
     def update_aws_credentials_file(aws_access_key_id, aws_secret_access_key)
@@ -122,13 +118,6 @@ module AwsRotate
     def aws_configure_set(options={})
       k, v = options.keys.first, options.values.first
       sh "aws configure set #{k} #{v} --profile #{@profile}"
-    end
-
-    def sh(command)
-      # no puts so we dont puts out the secret key value
-      # puts "=> #{command}" # uncomment to debug
-      success = system(command)
-      raise unless success
     end
   end
 end
