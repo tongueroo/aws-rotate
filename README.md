@@ -17,6 +17,25 @@ IMPORTANT: The `aws-rotate keys` command will update **all** the profiles found 
 
     aws-rotate keys --noop
 
+Example output:
+
+    $ aws-rotate keys
+    Backed up credentials file at: /home/ec2-user/.aws/credentials.bak-2019-08-14-16:45:36
+    Updating access key for AWS_PROFILE=profile1
+    Created new access key: AKIAXZ6ODJLQWYW3575A
+    Updated profile profile1 in /home/ec2-user/.aws/credentials with new key: AKIAXZ6ODJLQWYW3575A
+    Old access key deleted: AKIAXZ6ODJLQ3Q5TJUHN
+    Please note, it sometimes take a few seconds or even minutes before the new IAM access key is usable.
+    Updating access key for AWS_PROFILE=default
+    Updated profile default in /home/ec2-user/.aws/credentials with new key: AKIAXZ6ODJLQWYW3575A
+    Please note, it sometimes take a few seconds or even minutes before the new IAM access key is usable.
+    Updating access key for AWS_PROFILE=profile2
+    Created new access key: AKIAXCGZM5KIS35XPH5R
+    Updated profile profile2 in /home/ec2-user/.aws/credentials with new key: AKIAXCGZM5KIS35XPH5R
+    Old access key deleted: AKIAXCGZM5KI63JFCKFD
+    Please note, it sometimes take a few seconds or even minutes before the new IAM access key is usable.
+    $
+
 ### select filter option
 
 If you would like to selectively update profiles, you can use the `--select` option. The `-s` option is also shorthand for the `--select` option. Example:
