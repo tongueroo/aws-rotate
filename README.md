@@ -65,13 +65,12 @@ You can add a crontab to your system to automatically rotate the keys:
 
 You can add something like this:
 
-    30 22 * * * bash -l -c 'aws-rotate keys --select bolt --no-backup >> /var/log/cron/aws-rotate.log 2>&1' # rotate AWS keys daily
+    30 20 * * * bash -l -c 'aws-rotate keys --select dev-aws-profile test-aws-profile --no-backup >> /var/log/cron-aws-rotate.log 2>&1' # rotate AWS keys daily
 
 Create a `/var/log/cron/aws-rotate.log` that is writable with your user:
 
-    mkdir /var/log/cron
-    sudo chown `whoami`:`whoami` -R /var/log/cron
-    touch /var/log/cron/aws-rotate.log
+    sudo touch /var/log/cron-aws-rotate.log
+    sudo chown `whoami`:`whoami` /var/log/cron-aws-rotate.log
 
 ## Installation
 

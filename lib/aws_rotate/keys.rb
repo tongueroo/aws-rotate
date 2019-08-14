@@ -34,7 +34,7 @@ module AwsRotate
 
     def update_key
       Key.new(@options).run
-    rescue Key::GetIamUserError => e
+    rescue Key::GetIamUserError
       message = @options[:noop] ? "Will not be able to update key" : "Unable to update key"
       puts "WARN: #{message} for AWS_PROFILE=#{@profile}".color(:yellow)
     end

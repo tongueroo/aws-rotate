@@ -9,6 +9,8 @@ module AwsRotate
       lines = IO.readlines(@credentials_path)
       profiles = []
       lines.each do |line|
+        next if line =~ /^\s*#/ # ignore comments
+
         md = line.match(/\[(.*)\]/)
         profiles << md[1] if md
       end

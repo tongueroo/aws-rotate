@@ -4,6 +4,10 @@ module AwsRotate
     class GetIamUserError < StandardError; end
 
     def run
+      # Note: It is nice to always call get_iam_user first as it'll check access. We rescue exceptions
+      # and report errors early on. The noop check happens after this initial check.
+      # Also with this we can filter for only the keys thats that have associated users and will be updated.
+      # Only the profiles with IAM users will be shown as "Updating..."
       @user = get_iam_user # will only rotate keys that belong to an actual IAM user
       return unless @user
 
