@@ -3,16 +3,15 @@ require "aws-sdk-sts"
 
 module AwsRotate
   module AwsServices
-    extend Memoist
-
+    # Memoization takes into account different AWS_PROFILE
+    @@iam = {}
     def iam
-      Aws::IAM::Client.new
+      @@iam[ENV['AWS_PROFILE']] ||= Aws::IAM::Client.new
     end
-    memoize :iam
 
+    @@sts = {}
     def sts
-      Aws::STS::Client.new
+      @@sts[ENV['AWS_PROFILE']] ||= Aws::STS::Client.new
     end
-    memoize :sts
   end
 end

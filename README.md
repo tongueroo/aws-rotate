@@ -25,6 +25,10 @@ Or install it yourself as:
 
     gem install aws-rotate
 
+## Requirements
+
+The [aws cli](https://aws.amazon.com/cli/) is use to set the access keys and is required.
+
 ## Contributing
 
 1. Fork it

@@ -7,8 +7,8 @@ module AwsRotate
       return unless @user
 
       check_max_keys_limit
-      puts "Updating access key for AWS_PROFILE=#{@profile}"
-      key = create_access_key
+      puts "Updating access key for AWS_PROFILE=#{@profile}".color(:green)
+      key = cache_access_key || create_access_key
       backup_credentials
       update_aws_credentials_file(key.access_key_id, key.secret_access_key)
       delete_old_access_key
@@ -58,6 +58,13 @@ module AwsRotate
       exit 1
     end
 
+    @@cache = {}
+    def cache_access_key
+      old_key_id = aws_configure_get(:aws_access_key_id)
+      return unless old_key_id
+      @@cache[old_key_id]
+    end
+
     # Returns:
     #
     #   #<struct Aws::IAM::Types::AccessKey
@@ -70,8 +77,13 @@ module AwsRotate
     def create_access_key
       resp = iam.create_access_key
       key = resp.access_key
+
+      # store in cache to help with multiple profiles using the same aws access key
+      old_key_id = aws_configure_get(:aws_access_key_id)
+      @@cache[old_key_id] = CacheKey.new(old_key_id, key.access_key_id, key.secret_access_key)
+
       puts "Created new access key: #{key.access_key_id}"
-      resp.access_key
+      key
     end
 
     def backup_credentials
@@ -94,6 +106,10 @@ module AwsRotate
     def delete_old_access_key
       resp = iam.list_access_keys
       access_keys = resp.access_key_metadata
+      # Important: only delete if there are keys 2.  The reason this is possible is because multiple profiles can use
+      # the same aws_access_key_id. In this case, an additional key is not created but we use the key from the @@cache
+      return if access_keys.size <= 1
+
       old_key = access_keys.sort_by(&:create_date).first
       iam.delete_access_key(access_key_id: old_key.access_key_id)
       puts "Old access key deleted: #{old_key.access_key_id}"
@@ -118,6 +134,12 @@ module AwsRotate
     def aws_configure_set(options={})
       k, v = options.keys.first, options.values.first
       sh "aws configure set #{k} #{v} --profile #{@profile}"
+    end
+
+    def aws_configure_get(k)
+      out = `aws configure get #{k} --profile #{@profile}` # use backtick to grab output
+      out.strip!
+      out == '' ? nil : out
     end
   end
 end
