@@ -25,19 +25,17 @@ The `--select dev-` results in only profiles with the `dev-` found in the profil
 
 ~/.aws/credentials:
 
-```
-[my-dev-account1]
-aws_access_key_id=EXAMPLE1
-aws_secret_access_key=EXAMPLE1
+    [my-dev-account1]
+    aws_access_key_id=EXAMPLE1
+    aws_secret_access_key=EXAMPLE1
 
-[my-dev-account2]
-aws_access_key_id=EXAMPLE2
-aws_secret_access_key=EXAMPLE2
+    [my-dev-account2]
+    aws_access_key_id=EXAMPLE2
+    aws_secret_access_key=EXAMPLE2
 
-[my-prod-account]
-aws_access_key_id=EXAMPLE3
-aws_secret_access_key=EXAMPLE3
-```
+    [my-prod-account]
+    aws_access_key_id=EXAMPLE3
+    aws_secret_access_key=EXAMPLE3
 
 Will only update `my-dev-account1` and `my-dev-account1`, since they both include the `dev-` pattern.
 
@@ -57,7 +55,23 @@ A backup of your `~/.aws/credentials` file is taken and stored in `~/.aws/creden
 
 ## Assume Roles
 
-Note :assumed role profiles are skipped as they don't have access keys.
+Note: assumed role profiles are skipped as they don't have access keys.
+
+## Automatically Updating with Cron
+
+You can add a crontab to your system to automatically rotate the keys:
+
+    crontab -e
+
+You can add something like this:
+
+    30 22 * * * bash -l -c 'aws-rotate keys --select bolt --no-backup >> /var/log/cron/aws-rotate.log 2>&1' # rotate AWS keys daily
+
+Create a `/var/log/cron/aws-rotate.log` that is writable with your user:
+
+    mkdir /var/log/cron
+    sudo chown `whoami`:`whoami` -R /var/log/cron
+    touch /var/log/cron/aws-rotate.log
 
 ## Installation
 

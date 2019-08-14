@@ -43,6 +43,10 @@ module AwsRotate
       puts "The AWS_PROFILE=#{@profile} profile does not have access to IAM. Please double check it.".color(:red)
       puts "#{e.class} #{e.message}"
       raise GetIamUserError
+    rescue Aws::STS::Errors::SignatureDoesNotMatch => e
+      puts "The AWS_PROFILE=#{@profile} profile seems to have invalid secret keys. Please double check it.".color(:red)
+      puts "#{e.class} #{e.message}"
+      raise GetIamUserError
     end
 
     # Check if there are 2 keys, cannot rotate if there are 2 keys already.
