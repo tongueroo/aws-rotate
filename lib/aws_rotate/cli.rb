@@ -18,6 +18,8 @@ module AwsRotate
 
     desc "keys", "rotate keys for all profiles in ~/.aws/credentials"
     long_desc Help.text(:keys)
+    option :select, aliases: :s, type: :array, desc: "Select filter. List of patterns to select profiles for updating"
+    option :reject, aliases: :r, type: :array, desc: "Reject filter. List of patterns to reject profiles for updating"
     def keys
       Backup.new(options).run
       Keys.new(options).run

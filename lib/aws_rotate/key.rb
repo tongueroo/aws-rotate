@@ -1,13 +1,18 @@
 module AwsRotate
   class Key < Base
     class MaxKeysError < StandardError; end
+    class GetIamUserError < StandardError; end
 
     def run
       @user = get_iam_user # will only rotate keys that belong to an actual IAM user
       return unless @user
 
       check_max_keys_limit
-      puts "Updating access key for AWS_PROFILE=#{@profile}".color(:green)
+      message = "Updating access key for AWS_PROFILE=#{@profile}"
+      message = "NOOP: #{message}" if @options[:noop]
+      puts message.color(:green)
+      return false if @options[:noop]
+
       key = cache_access_key || create_access_key
       update_aws_credentials_file(key.access_key_id, key.secret_access_key)
       delete_old_access_key
@@ -18,6 +23,7 @@ module AwsRotate
 
     # Returns IAM username.
     # Returns nil unless this profile is actually associated with an user.
+    # Skips assume role profiles.
     def get_iam_user
       resp = sts.get_caller_identity
       arn = resp.arn
@@ -30,13 +36,13 @@ module AwsRotate
         arn.split('/').last
       end
     rescue Aws::Errors::MissingRegionError => e
-      puts "ERROR: #{e.message}".color(:red)
-      puts "The AWS_PROFILE=#{@profile} may not exist. Please double check it."
-      exit 1
+      puts "The AWS_PROFILE=#{@profile} may not exist. Please double check it.".color(:red)
+      puts "#{e.class} #{e.message}"
+      raise GetIamUserError
     rescue Aws::STS::Errors::InvalidClientTokenId => e
-      puts "ERROR: #{e.message}".color(:red)
-      puts "The AWS_PROFILE=#{@profile} profile does not have access to IAM. Please double check it."
-      exit 1
+      puts "The AWS_PROFILE=#{@profile} profile does not have access to IAM. Please double check it.".color(:red)
+      puts "#{e.class} #{e.message}"
+      raise GetIamUserError
     end
 
     # Check if there are 2 keys, cannot rotate if there are 2 keys already.

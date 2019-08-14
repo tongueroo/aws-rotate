@@ -1,6 +1,7 @@
 module AwsRotate
   class Backup < Base
     def run
+      return if @options[:noop]
       return unless credentials_exist?
       backup_path = @credentials_path + ".bak-#{Time.now.strftime("%F-%T")}"
       FileUtils.cp(@credentials_path, backup_path)
