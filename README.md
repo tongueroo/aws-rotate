@@ -29,11 +29,6 @@ Example output:
     Updating access key for AWS_PROFILE=default
     Updated profile default in /home/ec2-user/.aws/credentials with new key: AKIAXZ6ODJLQWYW3575A
     Please note, it sometimes take a few seconds or even minutes before the new IAM access key is usable.
-    Updating access key for AWS_PROFILE=profile2
-    Created new access key: AKIAXCGZM5KIS35XPH5R
-    Updated profile profile2 in /home/ec2-user/.aws/credentials with new key: AKIAXCGZM5KIS35XPH5R
-    Old access key deleted: AKIAXCGZM5KI63JFCKFD
-    Please note, it sometimes take a few seconds or even minutes before the new IAM access key is usable.
     $
 
 ### select filter option
