@@ -78,14 +78,6 @@ Add this line to your application's Gemfile:
 
     gem "aws-rotate"
 
-And then execute:
-
-    bundle
-
-Or install it yourself as:
-
-    gem install aws-rotate
-
 ## Requirements
 
 The [aws cli](https://aws.amazon.com/cli/) is use to set the access keys and is required.
