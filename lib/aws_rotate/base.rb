@@ -14,7 +14,7 @@ module AwsRotate
       if ENV['AWS_PROFILE'].nil?
         lines = IO.readlines(@credentials_path)
         default_found = lines.detect { |l| l =~ /\[default\]/ }
-        'default'
+        'default' if default_found
       else
         abort("AWS_PROFILE must be set")
       end
