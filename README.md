@@ -63,7 +63,7 @@ You can use both `--select` and `--reject` options together.
 
 ## Backups
 
-A backup of your `~/.aws/credentials` file is taken and stored in `~/.aws/credentials-bak-[timestamp]` before it is updated. However, please take precaution and take your own backup measures.
+A backup of your `~/.aws/credentials` file is taken and stored in `~/.aws/credentials-bak-[timestamp]` before it is updated. However, please take precaution and take your own backup measures.  You can also disable backups with the `--no-backup` option.
 
 ## Assume Roles
 
