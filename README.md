@@ -17,6 +17,8 @@ IMPORTANT: The `aws-rotate keys` command will update **all** the profiles found 
 
     aws-rotate keys --noop
 
+### select filter option
+
 If you would like to selectively update profiles, you can use the `--select` option. The `-s` option is also shorthand for the `--select` option. Example:
 
     aws-rotate keys --select dev-
@@ -48,6 +50,8 @@ Also, the select option is internally converted to an ruby regexp. So you can us
     aws-rotate keys --select ^dev-
 
 In this case the match is stricter and must start with "dev"
+
+### reject filter option
 
 There is also a `--reject` and `-r` option that does the opposite of the `--select` option.
 
