@@ -11,6 +11,8 @@ require "byebug"
 root = File.expand_path("../", File.dirname(__FILE__))
 require "#{root}/lib/aws-rotate"
 
+require 'webmock/rspec'
+
 module Helper
   def execute(cmd)
     puts "Running: #{cmd}" if show_command?

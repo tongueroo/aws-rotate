@@ -11,9 +11,9 @@ module AwsRotate
       key = cache_access_key || create_access_key
       update_aws_credentials_file(key.access_key_id, key.secret_access_key)
       delete_old_access_key
-      puts "Hi"
       patience_message
       aws_environment_variables_warning
+      true
     end
 
     # Returns IAM username.
