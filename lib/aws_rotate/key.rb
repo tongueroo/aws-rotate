@@ -27,10 +27,18 @@ module AwsRotate
       true
     end
 
+    def get_iam_user
+      get_iam_user!
+    rescue GetIamUserError
+      message = @options[:noop] ? "Will not be able to update key" : "Unable to update key"
+      puts "WARN: #{message} for AWS_PROFILE=#{@profile}".color(:yellow)
+      return false
+    end
+
     # Returns IAM username.
     # Returns nil unless this profile is actually associated with an user.
     # Skips assume role profiles.
-    def get_iam_user
+    def get_iam_user!
       resp = sts.get_caller_identity
       arn = resp.arn
       # Example arns:

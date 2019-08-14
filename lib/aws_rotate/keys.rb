@@ -6,7 +6,7 @@ module AwsRotate
         next unless filter_match?(profile)
 
         ENV['AWS_PROFILE'] = profile
-        update_key
+        Key.new(@options).run
       end
     end
 
@@ -30,13 +30,6 @@ module AwsRotate
         profile =~ regexp
       end
       selected
-    end
-
-    def update_key
-      Key.new(@options).run
-    rescue Key::GetIamUserError
-      message = @options[:noop] ? "Will not be able to update key" : "Unable to update key"
-      puts "WARN: #{message} for AWS_PROFILE=#{@profile}".color(:yellow)
     end
   end
 end
