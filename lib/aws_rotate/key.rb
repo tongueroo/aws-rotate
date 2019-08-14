@@ -11,7 +11,9 @@ module AwsRotate
       @user = get_iam_user # will only rotate keys that belong to an actual IAM user
       return unless @user
 
-      check_max_keys_limit
+      at_max = check_max_keys_limit
+      return false if at_max
+
       message = "Updating access key for AWS_PROFILE=#{@profile}"
       message = "NOOP: #{message}" if @options[:noop]
       puts message.color(:green)
@@ -55,15 +57,18 @@ module AwsRotate
 
     # Check if there are 2 keys, cannot rotate if there are 2 keys already.
     # Raise error if there are 2 keys.
+    # Returns false if not at max limit
     MAX_KEYS = 2
     def check_max_keys_limit!
       resp = iam.list_access_keys(user_name: @user)
-      return if resp.access_key_metadata.size < MAX_KEYS
+      return false if resp.access_key_metadata.size < MAX_KEYS # not at max limit
       raise MaxKeysError
     end
 
     # Check if there are 2 keys, cannot rotate if there are 2 keys already.
     # Display info message for user to reduce it to 1 key.
+    # Returns false if not at max limit
+    # Returns true if at max limit
     def check_max_keys_limit
       check_max_keys_limit!
     rescue MaxKeysError
@@ -71,7 +76,7 @@ module AwsRotate
         This user #{@user} in the AWS_PROFILE=#{@profile} has 2 access keys. This is the max number of keys allowed.
         Please remove at least one of the keys so aws-rotate can rotate the key.
       EOL
-      exit 1
+      true # at max limit
     end
 
     @@cache = {}

@@ -3,7 +3,7 @@ describe AwsRotate::Key do
     rotater = AwsRotate::Key.new
     # The methods that are commented out have stubs at lower-levels.
     # allow(rotater).to receive(:get_iam_user).and_return('tung')
-    allow(rotater).to receive(:check_max_keys_limit).and_return(null)
+    allow(rotater).to receive(:check_max_keys_limit).and_return(false)
     allow(rotater).to receive(:cache_access_key).and_return(cache_access_key)
     # allow(rotater).to receive(:create_access_key).and_return(create_access_key)
     allow(rotater).to receive(:update_aws_credentials_file).and_return(null)
