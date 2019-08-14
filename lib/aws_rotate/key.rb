@@ -96,7 +96,7 @@ module AwsRotate
 
       # store in cache to help with multiple profiles using the same aws access key
       old_key_id = aws_configure_get(:aws_access_key_id)
-      @@cache[old_key_id] = CacheKey.new(old_key_id, key.access_key_id, key.secret_access_key)
+      @@cache[old_key_id] = OldKey.new(old_key_id, key.access_key_id, key.secret_access_key)
 
       puts "Created new access key: #{key.access_key_id}"
       key
