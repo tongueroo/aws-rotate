@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe AwsRotate::CLI do
   before(:all) do
     @args = ""

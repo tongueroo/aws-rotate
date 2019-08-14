@@ -9,10 +9,10 @@ module AwsRotate
       check_max_keys_limit
       puts "Updating access key for AWS_PROFILE=#{@profile}".color(:green)
       key = cache_access_key || create_access_key
-      backup_credentials
       update_aws_credentials_file(key.access_key_id, key.secret_access_key)
       delete_old_access_key
-      patience_warning
+      puts "Hi"
+      patience_message
       aws_environment_variables_warning
     end
 
@@ -40,7 +40,7 @@ module AwsRotate
     end
 
     # Check if there are 2 keys, cannot rotate if there are 2 keys already.
-    # Display info message for user to reduce it to 1 key.
+    # Raise error if there are 2 keys.
     MAX_KEYS = 2
     def check_max_keys_limit!
       resp = iam.list_access_keys(user_name: @user)
@@ -48,11 +48,13 @@ module AwsRotate
       raise MaxKeysError
     end
 
+    # Check if there are 2 keys, cannot rotate if there are 2 keys already.
+    # Display info message for user to reduce it to 1 key.
     def check_max_keys_limit
       check_max_keys_limit!
     rescue MaxKeysError
       puts <<~EOL.color(:red)
-        This user #{@user} has 2 access keys. This is the max number of keys allowed.
+        This user #{@user} in the AWS_PROFILE=#{@profile} has 2 access keys. This is the max number of keys allowed.
         Please remove at least one of the keys so aws-rotate can rotate the key.
       EOL
       exit 1
@@ -86,17 +88,6 @@ module AwsRotate
       key
     end
 
-    def backup_credentials
-      ensure_dot_aws_exists
-      backup_path = @credentials_path + ".bak-#{Time.now.strftime("%F-%T")}"
-      FileUtils.cp(@credentials_path, backup_path)
-      puts "Backed up credentials file at: #{backup_path}"
-    end
-
-    def ensure_dot_aws_exists
-      FileUtils.mkdir_p(File.dirname(@credentials_path))
-    end
-
     def update_aws_credentials_file(aws_access_key_id, aws_secret_access_key)
       aws_configure_set(aws_access_key_id: aws_access_key_id)
       aws_configure_set(aws_secret_access_key: aws_secret_access_key)
@@ -115,7 +106,7 @@ module AwsRotate
       puts "Old access key deleted: #{old_key.access_key_id}"
     end
 
-    def patience_warning
+    def patience_message
       puts "Please note, it sometimes take a few seconds or even minutes before the new IAM access key is usable."
     end
 

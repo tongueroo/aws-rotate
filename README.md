@@ -11,6 +11,14 @@ Rotates your ~/.aws keys.
     aws-rotate key  # rotates single key. Uses AWS_PROFILE env var
     aws-rotate keys # rotates **all** keys for all profiles in ~/.aws/credentials
 
+## aws-rotate keys
+
+The `aws-rotate keys` command will
+
+## Backups
+
+A backup of your `~/.aws/credentials` file is taken and stored in `~/.aws/credentials-bak-[timestamp]` before it is updated. However, please take precaution and take your own backup measures.
+
 ## Installation
 
 Add this line to your application's Gemfile:

@@ -12,12 +12,14 @@ module AwsRotate
     desc "key", "rotate key for AWS_PROFILE profile"
     long_desc Help.text(:key)
     def key
+      Backup.new(options).run
       Key.new(options).run
     end
 
     desc "keys", "rotate keys for all profiles in ~/.aws/credentials"
     long_desc Help.text(:keys)
     def keys
+      Backup.new(options).run
       Keys.new(options).run
     end
 
