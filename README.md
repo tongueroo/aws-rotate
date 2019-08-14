@@ -100,9 +100,9 @@ Create a `/var/log/cron-aws-rotate.log` that is writable with your user:
 
 ## Installation
 
-Add this line to your application's Gemfile:
+You can install the tool with:
 
-    gem "aws-rotate"
+    gem install aws-rotate
 
 ## Requirements
 
