@@ -8,9 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = AwsRotate::VERSION
   spec.authors       = ["Tung Nguyen"]
   spec.email         = ["tongueroo@gmail.com"]
-  spec.summary       = "Generated with cli-template tool. Please write a gem summary"
-  spec.description   = "Generated with cli-template tool. Write a longer description or delete this line."
-  spec.homepage      = ""
+  spec.summary       = "Easy way to rotate all your AWS keys in your ~/.aws/credentials"
+  spec.homepage      = "https://github.com/tongueroo/aws-rotate"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
