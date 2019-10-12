@@ -8,6 +8,7 @@ module AwsRotate
       # and report errors early on. The noop check happens after this initial check.
       # Also with this we can filter for only the keys thats that have associated users and will be updated.
       # Only the profiles with IAM users will be shown as "Updating..."
+      puts "AWS_PROFILE=#{ENV['AWS_PROFILE']}"
       @user = get_iam_user # will only rotate keys that belong to an actual IAM user
       return unless @user
 
@@ -59,6 +60,10 @@ module AwsRotate
       raise GetIamUserError
     rescue Aws::STS::Errors::SignatureDoesNotMatch => e
       puts "The AWS_PROFILE=#{@profile} profile seems to have invalid secret keys. Please double check it.".color(:red)
+      puts "#{e.class} #{e.message}"
+      raise GetIamUserError
+    rescue Aws::Errors::NoSourceProfileError => e
+      puts "WARN: The AWS_PROFILE=#{@profile} profile does not have have access keys.".color(:yellow)
       puts "#{e.class} #{e.message}"
       raise GetIamUserError
     end
