@@ -1,20 +1,45 @@
 module AwsRotate
   class List < Base
+    def initialize(options={})
+      super
+      @lines = IO.readlines(@credentials_path)
+    end
+
     def run
       puts "AWS Profiles:"
       puts profiles
+      profiles
     end
 
+    # Only returns profiles that have aws_access_key_id associated
     def profiles
-      lines = IO.readlines(@credentials_path)
-      profiles = []
-      lines.each do |line|
+      has_key, within_profile, profiles = false, false, []
+      all_profiles.each do |profile|
+        @lines.each do |line|
+          line = line.strip
+          within_profile = false if line =~ /^\[/ # on the next profile section, reset flag
+          within_profile ||= line == "[#{profile}]" # enable checking
+          if within_profile
+            has_key = line =~ /^aws_access_key_id/
+            if has_key
+              profiles << profile
+              break
+            end
+          end
+        end
+      end
+      profiles
+    end
+
+    def all_profiles
+      all_profiles = []
+      @lines.each do |line|
         next if line =~ /^\s*#/ # ignore comments
 
         md = line.match(/\[(.*)\]/)
-        profiles << md[1] if md
+        all_profiles << md[1] if md
       end
-      profiles
+      all_profiles
     end
   end
 end
