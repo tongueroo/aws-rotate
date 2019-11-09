@@ -11,8 +11,14 @@ module AwsRotate
       profiles
     end
 
-    # Only returns profiles that have aws_access_key_id associated
+    # Only returns profiles that have aws_access_key_id without mfa_serial
     def profiles
+      iam_profiles = find_profiles(/^aws_access_key_id/)
+      mfa_profiles = find_profiles(/^mfa_serial/)
+      iam_profiles - mfa_profiles
+    end
+
+    def find_profiles(regexp)
       has_key, within_profile, profiles = false, false, []
       all_profiles.each do |profile|
         @lines.each do |line|
@@ -20,7 +26,7 @@ module AwsRotate
           within_profile = false if line =~ /^\[/ # on the next profile section, reset flag
           within_profile ||= line == "[#{profile}]" # enable checking
           if within_profile
-            has_key = line =~ /^aws_access_key_id/
+            has_key = line =~ regexp
             if has_key
               profiles << profile
               break
